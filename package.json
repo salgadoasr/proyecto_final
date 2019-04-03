@@ -1,0 +1,31 @@
+{
+  "name": "kits4knitters",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alberto Salgado Rodríguez",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salgadoasr/proyecto_final.git"
+  },
+  "bugs": {
+    "url": "https://github.com/salgadoasr/proyecto_final/issues"
+  },
+  "homepage": "https://github.com/salgadoasr/proyecto_final#readme",
+  "description": "",
+  "dependencies": {
+    "mysql2": "1.6.4",
+    "express": "4.16.4"
+  },
+  "devDependencies": {
+    "eslint": "5.9.0",
+    "eslint-config-airbnb": "17.1.0",
+    "eslint-config-airbnb-base": "13.1.0",
+    "eslint-plugin-import": "2.14.0",
+    "eslint-plugin-security": "1.4.0",
+    "nodemon": "1.18.10"
+  }
+}
