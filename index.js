@@ -1,5 +1,7 @@
 'use strict';
 
+require('dotenv').config();
+
 const webServer = require('./webserver');
 const httpServerConfig = require('./config/http-server-config');
 const mysqlPool = require('./databases/mysql-pool');

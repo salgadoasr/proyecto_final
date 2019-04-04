@@ -18,7 +18,8 @@
   "description": "",
   "dependencies": {
     "mysql2": "1.6.4",
-    "express": "4.16.4"
+    "express": "4.16.4",
+    "dotenv": "6.2.0"
   },
   "devDependencies": {
     "eslint": "5.9.0",
