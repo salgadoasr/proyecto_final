@@ -7,19 +7,16 @@
   },
   "author": "Alberto Salgado Rodríguez",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/salgadoasr/proyecto_final.git"
-  },
-  "bugs": {
-    "url": "https://github.com/salgadoasr/proyecto_final/issues"
-  },
-  "homepage": "https://github.com/salgadoasr/proyecto_final#readme",
   "description": "",
   "dependencies": {
+    "body-parser": "^1.18.3",
+    "dotenv": "6.2.0",
+    "express": "^4.16.4",
     "mysql2": "1.6.4",
-    "express": "4.16.4",
-    "dotenv": "6.2.0"
+    "joi": "14.3.0",
+    "@sendgrid/mail": "6.3.1",
+    "bcrypt": "3.0.2",
+    "uuid": "3.3.2"
   },
   "devDependencies": {
     "eslint": "5.9.0",

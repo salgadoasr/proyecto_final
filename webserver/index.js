@@ -1,10 +1,35 @@
 'use strict';
 
 const express = require('express');
+const bodyParser = require('body-parser');
+const routes = require('./routes');
 
 
 const app = express();
 let server = null;
+
+app.use(bodyParser.json());
+
+
+app.use((req, res, next) => {
+  const accessControlAllowMethods = [
+    // fill the methods
+  ];
+
+  const accessControlAllowHeaders = [
+    // fill the headers
+  ];
+
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  // Access-Control-Allow-Methods: put accessControlAllowHeaders separated by comma
+  res.header('Access-Control-Allow-Methods', accessControlAllowMethods.join(','));
+  // put accessControlAllowHeaders separated by comma
+  res.header('Access-Control-Allow-Headers', accessControlAllowHeaders.join(','));
+  next();
+});
+
+app.use('/api', routes.accountRouter);
 
 async function listen(port) {
   if (server === null) {
