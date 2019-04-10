@@ -16,7 +16,8 @@
     "joi": "14.3.0",
     "@sendgrid/mail": "6.3.1",
     "bcrypt": "3.0.2",
-    "uuid": "3.3.2"
+    "uuid": "3.3.2",
+    "jsonwebtoken": "8.4.0"
   },
   "devDependencies": {
     "eslint": "5.9.0",

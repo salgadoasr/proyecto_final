@@ -11,7 +11,6 @@ sendgridMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 async function validateSchema(payload) {
   const schema = {
-    fullname: Joi.string().min(3).max(150).required(),
     email: Joi.string().email({ minDomainAtoms: 2 }).required(),
     password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required(),
   };
@@ -20,7 +19,7 @@ async function validateSchema(payload) {
 }
 
 
-async function insertUserIntoDatabase(fullName, email, password) {
+async function insertUserIntoDatabase(name, email, password, direction) {
   const securePassword = await bcrypt.hash(password, 10);
   const uuid = uuidV4();
   const verificationCode = uuidV4();
@@ -32,7 +31,8 @@ async function insertUserIntoDatabase(fullName, email, password) {
   await connection.query('INSERT INTO users SET ?', {
     uuid,
     email,
-    name: fullName,
+    name,
+    direction,
     password: securePassword,
     created_at: createdAt,
     verification_code: verificationCode,
@@ -71,23 +71,25 @@ async function create(req, res, next) {
   }
 
   const {
-    fullname,
+    name,
+    surnames,
     email,
     password,
   } = accountData;
 
   try {
-    const verificationCode = await insertUserIntoDatabase(fullname, email, password);
+    const verificationCode = await insertUserIntoDatabase(`'${name}' '${surnames}'`, email, password);
 
     try {
       await sendEmailRegistration(email, verificationCode);
     } catch (error) {
       console.error('Sengrid error', error.message);
     }
+
+    return res.status(204).json();
   } catch (error) {
     next(error.message);
   }
-  return res.status(204).json();
 }
 
 module.exports = create;

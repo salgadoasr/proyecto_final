@@ -30,6 +30,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api', routes.accountRouter);
+app.use('/api', routes.userRouter);
 
 async function listen(port) {
   if (server === null) {
