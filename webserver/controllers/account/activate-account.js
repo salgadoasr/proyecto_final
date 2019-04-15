@@ -29,8 +29,8 @@ async function activate(req, res, next) {
 
     connection.release();
     return res.send('Verification code invalid');
-  } catch (e) {
-    return res.status(500).send(e.message);
+  } catch (error) {
+    return res.status(500).send(error.message);
   }
 }
 

@@ -1,0 +1,57 @@
+'use strict';
+
+const cloudinary = require('cloudinary');
+
+const mySqlPool = require('../../../databases/mysql-pool');
+
+const cloudName = process.env.CLOUDINARI_CLOUD_NAME;
+const apiKey = process.env.CLOUDINARI_API_KEY;
+const apiSecret = process.env.CLOUDINARI_API_SECRET;
+
+cloudinary.config({
+  cloud_name: cloudName,
+  api_key: apiKey,
+  api_secret: apiSecret,
+});
+
+async function uploadImage(req, res, next) {
+  const { file } = req;
+  const { uuid } = req.body;
+
+  try {
+    if (!file.buffer) {
+      return res.status(400).send();
+    }
+
+    cloudinary.v2.uploader.upload_stream({
+      resource_type: 'raw',
+      public_id: uuid,
+      width: 200,
+      height: 200,
+      format: 'jpg',
+      crop: 'limit',
+    }, async (error, result) => {
+      if (error) {
+        return res.status(400).send(error);
+      }
+
+      const {
+        secure_url: secureUrl,
+      } = result;
+
+      const connection = await mySqlPool.getConnection();
+
+      await connection.query(`UPDATE products SET image_url = '${secureUrl}' WHERE product_uuid = '${uuid}'`);
+
+      connection.release();
+
+      res.header('Location', secureUrl);
+      return res.status(204).send();
+    }).end(file.buffer);
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+}
+
+
+module.exports = uploadImage;

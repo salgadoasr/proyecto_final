@@ -4,15 +4,20 @@ const bcrypt = require('bcrypt');
 const Joi = require('joi');
 const sendgridMail = require('@sendgrid/mail');
 const uuidV4 = require('uuid/v4');
+
 const mysqlPool = require('../../../databases/mysql-pool');
+
 
 sendgridMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-
+// corregir cuando tenga la tabla bien definida
 async function validateSchema(payload) {
   const schema = {
+    name: Joi.string().min(3).max(150).required(),
+    surnames: Joi.string().max(150),
     email: Joi.string().email({ minDomainAtoms: 2 }).required(),
     password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required(),
+    direction: Joi.string().max(150),
   };
 
   return Joi.validate(payload, schema);
@@ -29,7 +34,7 @@ async function insertUserIntoDatabase(name, email, password, direction) {
   const connection = await mysqlPool.getConnection();
 
   await connection.query('INSERT INTO users SET ?', {
-    uuid,
+    user_uuid: uuid,
     email,
     name,
     direction,
@@ -70,15 +75,17 @@ async function create(req, res, next) {
     return res.status(400).send(error.message);
   }
 
+  // corregir cuando tenga la tabla bien definida
   const {
     name,
     surnames,
     email,
     password,
+    direction,
   } = accountData;
 
   try {
-    const verificationCode = await insertUserIntoDatabase(`'${name}' '${surnames}'`, email, password);
+    const verificationCode = await insertUserIntoDatabase(`${name} ${surnames}`, email, password, direction);
 
     try {
       await sendEmailRegistration(email, verificationCode);
@@ -86,9 +93,9 @@ async function create(req, res, next) {
       console.error('Sengrid error', error.message);
     }
 
-    return res.status(204).json();
+    return res.status(204).send();
   } catch (error) {
-    next(error.message);
+    return res.status(500).send();
   }
 }
 

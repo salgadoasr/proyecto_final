@@ -27,8 +27,7 @@ async function login(req, res, next) {
   try {
     const connection = await mysqlPool.getConnection();
 
-    const sqlQuery = `SELECT
-    id, uuid, name, email, password, activated_at, is_admin
+    const sqlQuery = `SELECT *
     FROM users
     WHERE email = '${accountData.email}'`;
 
@@ -50,7 +49,7 @@ async function login(req, res, next) {
       }
 
       const payloadJwt = {
-        uuid: userData.uuid,
+        uuid: userData.user_uuid,
         isAdmin: userData.is_admin,
       };
 

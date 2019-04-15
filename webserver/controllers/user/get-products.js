@@ -11,15 +11,29 @@ async function getProducts(req, res, next) {
   try {
     const connection = await mySqlPool.getConnection();
 
-    const sqlQuery = `SELECT id, uuid, name, available, specifications
-    FROM product
-    WHERE type_id ='${typeProduct.type_id}'`;
+    if (typeProduct.type_id === undefined) {
 
-    const [result] = await connection.query(sqlQuery);
+      // corregir el select * cuando tenga la tabla bien definida
+      const sqlQuery = 'SELECT * FROM products';
+      const [result] = await connection.query(sqlQuery);
 
-    if (result.length > 0) {
-      connection.release();
-      return res.status(200).send(result);
+      if (result.length > 0) {
+        connection.release();
+        return res.status(200).send(result);
+      }
+    } else {
+
+      // corregir el select * cuando tenga la tabla bien definida
+      const sqlQuery = `SELECT *
+      FROM products
+      WHERE type_id ='${typeProduct.type_id}'`;
+
+      const [result] = await connection.query(sqlQuery);
+
+      if (result.length > 0) {
+        connection.release();
+        return res.status(200).send(result);
+      }
     }
 
     connection.release();
