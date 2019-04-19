@@ -9,7 +9,7 @@ const createOrder = require('../controllers/user/create-order');
 
 const userRouter = express.Router();
 
-userRouter.get('/user/products', checkJwtToken, getProducts);
+userRouter.get('/user/products', getProducts);
 userRouter.post('/user/createorder', checkJwtToken, createOrder);
 
 module.exports = userRouter;

@@ -12,13 +12,9 @@ app.use(bodyParser.json());
 
 
 app.use((req, res, next) => {
-  const accessControlAllowMethods = [
-    // fill the methods
-  ];
+  const accessControlAllowMethods = ['POST', 'GET', 'PUT', 'DELETE', 'OPTIONS'];
 
-  const accessControlAllowHeaders = [
-    // fill the headers
-  ];
+  const accessControlAllowHeaders = ['Location', 'Authorization', 'Content-Type'];
 
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Credentials', 'true');
@@ -27,6 +23,7 @@ app.use((req, res, next) => {
   // put accessControlAllowHeaders separated by comma
   res.header('Access-Control-Allow-Headers', accessControlAllowHeaders.join(','));
   next();
+
 });
 
 app.use('/api', routes.accountRouter);
