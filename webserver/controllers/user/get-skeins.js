@@ -1,11 +1,9 @@
 'use strict';
 
-const Joi = require('joi');
-
 const mySqlPool = require('../../../databases/mysql-pool');
 
 
-async function getProducts(req, res, next) {
+async function getSkeins(req, res, next) {
   const typeProduct = { ...req.body };
 
   try {
@@ -14,7 +12,7 @@ async function getProducts(req, res, next) {
     if (typeProduct.type_id === undefined) {
 
       // corregir el select * cuando tenga la tabla bien definida
-      const sqlQuery = 'SELECT * FROM products';
+      const sqlQuery = 'SELECT * FROM skeins s INNER JOIN colors c ON s.color_id = c.color_id';
       const [result] = await connection.query(sqlQuery);
 
       if (result.length > 0) {
@@ -25,8 +23,8 @@ async function getProducts(req, res, next) {
 
       // corregir el select * cuando tenga la tabla bien definida
       const sqlQuery = `SELECT *
-      FROM products
-      WHERE type_id ='${typeProduct.type_id}'`;
+      FROM skeins s INNER JOIN colors c ON s.color_id = c.color_id
+      WHERE s.type_id ='${typeProduct.type_id}'`;
 
       const [result] = await connection.query(sqlQuery);
 
@@ -43,4 +41,4 @@ async function getProducts(req, res, next) {
   }
 }
 
-module.exports = getProducts;
+module.exports = getSkeins;

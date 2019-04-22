@@ -13,29 +13,35 @@ sendgridMail.setApiKey(process.env.SENDGRID_API_KEY);
 async function validateSchema(payload) {
   const schema = {
     name: Joi.string().min(3).max(255).required(),
-    available: Joi.number().integer().min(0).max(1),
-    specifications: Joi.string().max(1000),
-    type_id: Joi.number().integer().min(1).max(20),
-    image_url: Joi.string().min(3).max(255),
+    available: Joi.number().integer().min(0).max(1).required(),
+    description: Joi.string().max(1000).required(),
+    type_id: Joi.number().integer().min(1).max(20).required(),
     prize: Joi.number().required(),
+    composition: Joi.string().max(1000).required(),
+    weight: Joi.string().min(3).max(255).required(),
+    large: Joi.string().min(3).max(255).required(),
+    color_id: Joi.number().integer().min(1).max(20).required(),
   };
 
   return Joi.validate(payload, schema);
 }
 
 
-async function insertProductIntoDatabase(uuid, name, available, specifications, typeId, imageUrl, prize) {
+async function insertSkeinIntoDatabase(uuid, name, available, description, typeId, prize, composition, weight, large, colorId) {
 
   const connection = await mysqlPool.getConnection();
 
-  await connection.query('INSERT INTO products SET ?', {
-    product_uuid: uuid,
+  await connection.query('INSERT INTO skeins SET ?', {
+    skein_uuid: uuid,
     name,
     available,
-    specifications,
+    description,
     type_id: typeId,
-    image_url: imageUrl,
     prize,
+    composition,
+    weight,
+    large,
+    color_id: colorId,
   });
 
   connection.release();
@@ -43,7 +49,6 @@ async function insertProductIntoDatabase(uuid, name, available, specifications, 
 
 async function create(req, res, next) {
   const accountData = { ...req.body };
-  const { image_url: imageUrl } = req.claims;
 
   try {
     await validateSchema(accountData);
@@ -55,15 +60,19 @@ async function create(req, res, next) {
   const {
     name,
     available,
-    specifications,
     type_id: typeId,
     prize,
+    composition,
+    weight,
+    large,
+    color_id: colorId,
+    description,
   } = accountData;
 
   const uuid = uuidV4();
 
   try {
-    await insertProductIntoDatabase(uuid, name, available, specifications, typeId, imageUrl, prize);
+    await insertSkeinIntoDatabase(uuid, name, available, description, typeId, prize, composition, weight, large, colorId);
 
     return res.status(201).json(uuid);
   } catch (error) {

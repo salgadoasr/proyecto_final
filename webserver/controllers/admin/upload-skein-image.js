@@ -16,7 +16,7 @@ cloudinary.config({
 
 async function uploadImage(req, res, next) {
   const { file } = req;
-  const { uuid } = req.body;
+  const { uuid, name } = req.body;
 
   try {
     if (!file.buffer) {
@@ -25,7 +25,7 @@ async function uploadImage(req, res, next) {
 
     cloudinary.v2.uploader.upload_stream({
       resource_type: 'raw',
-      public_id: uuid,
+      //public_id: uuid,
       width: 200,
       height: 200,
       format: 'jpg',
@@ -41,7 +41,7 @@ async function uploadImage(req, res, next) {
 
       const connection = await mySqlPool.getConnection();
 
-      await connection.query(`UPDATE products SET image_url = '${secureUrl}' WHERE product_uuid = '${uuid}'`);
+      await connection.query(`INSERT INTO colors SET image_url = '${secureUrl}', skein_uuid = '${uuid}', name = '${name}'`);
 
       connection.release();
 

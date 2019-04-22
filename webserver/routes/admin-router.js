@@ -5,16 +5,16 @@ const multer = require('multer');
 
 const checkJwtToken = require('../controllers/session/check-jwt-token');
 const checkIsAdmin = require('../controllers/admin/check-is-admin');
-const uploadProductImage = require('../controllers/admin/upload-product-image');
-const createProduct = require('../controllers/admin/create-product');
-const deleteProduct = require('../controllers/admin/delete-product');
+const uploadSkeinImage = require('../controllers/admin/upload-skein-image');
+const createSkein = require('../controllers/admin/create-skein');
+const deleteSkein = require('../controllers/admin/delete-skein');
 
 const upload = multer();
 const adminRouter = express.Router();
 
-adminRouter.post('/admin/product', checkJwtToken, checkIsAdmin, createProduct);
-adminRouter.post('/admin/uploadimage', checkJwtToken, checkIsAdmin, upload.single('product'), uploadProductImage);
-adminRouter.post('/admin/deleteproduct', checkJwtToken, checkIsAdmin, deleteProduct);
+adminRouter.post('/admin/skein', checkJwtToken, checkIsAdmin, createSkein);
+adminRouter.post('/admin/uploadimage', checkJwtToken, checkIsAdmin, upload.single('skein'), uploadSkeinImage);
+adminRouter.post('/admin/deleteskein', checkJwtToken, checkIsAdmin, deleteSkein);
 
 
 module.exports = adminRouter;

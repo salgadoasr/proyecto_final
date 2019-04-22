@@ -3,20 +3,20 @@
 const mysqlPool = require('../../../databases/mysql-pool');
 
 
-async function deleteProductFromDatabase(uuid) {
+async function deleteSkeinFromDatabaseFromDatabase(uuid) {
 
   const connection = await mysqlPool.getConnection();
 
-  await connection.query(`DELETE FROM products WHERE product_uuid = '${uuid}'`);
+  await connection.query(`DELETE FROM skeins WHERE skein_uuid = '${uuid}'`);
 
   connection.release();
 }
 
-async function deleteProduct(req, res, next) {
+async function deleteSkeinFromDatabase(req, res, next) {
   const { uuid } = req.body;
 
   try {
-    await deleteProductFromDatabase(uuid);
+    await deleteSkeinFromDatabaseFromDatabase(uuid);
 
     return res.status(204).send();
   } catch (error) {
@@ -24,4 +24,4 @@ async function deleteProduct(req, res, next) {
   }
 }
 
-module.exports = deleteProduct;
+module.exports = deleteSkeinFromDatabase;
