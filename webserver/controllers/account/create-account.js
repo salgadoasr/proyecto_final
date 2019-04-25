@@ -14,17 +14,17 @@ sendgridMail.setApiKey(process.env.SENDGRID_API_KEY);
 async function validateSchema(payload) {
   const schema = {
     name: Joi.string().min(3).max(150).required(),
-    surnames: Joi.string().max(150),
+    surnames: Joi.string().max(150).required(),
     email: Joi.string().email({ minDomainAtoms: 2 }).required(),
     password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required(),
-    direction: Joi.string().max(150),
+    direction: Joi,
   };
 
   return Joi.validate(payload, schema);
 }
 
 
-async function insertUserIntoDatabase(name, email, password, direction) {
+async function insertUserIntoDatabase(name, surnames, email, password, direction) {
   const securePassword = await bcrypt.hash(password, 10);
   const uuid = uuidV4();
   const verificationCode = uuidV4();
@@ -37,6 +37,7 @@ async function insertUserIntoDatabase(name, email, password, direction) {
     user_uuid: uuid,
     email,
     name,
+    surnames,
     direction,
     password: securePassword,
     created_at: createdAt,
@@ -85,7 +86,7 @@ async function create(req, res, next) {
   } = accountData;
 
   try {
-    const verificationCode = await insertUserIntoDatabase(`${name} ${surnames}`, email, password, direction);
+    const verificationCode = await insertUserIntoDatabase(name, surnames, email, password, direction);
 
     try {
       await sendEmailRegistration(email, verificationCode);

@@ -4,15 +4,15 @@ const mySqlPool = require('../../../databases/mysql-pool');
 
 
 async function getSkeins(req, res, next) {
-  const typeProduct = { ...req.body };
+  const { type_id: typeId } = req.query;
 
   try {
     const connection = await mySqlPool.getConnection();
 
-    if (typeProduct.type_id === undefined) {
+    if (typeId === undefined) {
 
       // corregir el select * cuando tenga la tabla bien definida
-      const sqlQuery = 'SELECT * FROM skeins s INNER JOIN colors c ON s.color_id = c.color_id';
+      const sqlQuery = 'SELECT * FROM skeins s INNER JOIN colors c INNER JOIN types t ON s.color_id = c.color_id AND s.type_id = t.type_id';
       const [result] = await connection.query(sqlQuery);
 
       if (result.length > 0) {
@@ -23,8 +23,8 @@ async function getSkeins(req, res, next) {
 
       // corregir el select * cuando tenga la tabla bien definida
       const sqlQuery = `SELECT *
-      FROM skeins s INNER JOIN colors c ON s.color_id = c.color_id
-      WHERE s.type_id ='${typeProduct.type_id}'`;
+      FROM skeins s INNER JOIN colors c INNER JOIN types t ON s.color_id = c.color_id AND s.type_id = t.type_id
+      WHERE s.type_id ='${typeId}'`;
 
       const [result] = await connection.query(sqlQuery);
 
