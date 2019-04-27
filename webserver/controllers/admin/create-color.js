@@ -16,7 +16,7 @@ cloudinary.config({
 
 async function uploadImage(req, res, next) {
   const { file } = req;
-  const { uuid, name } = req.body;
+  const { uuid, color } = req.body;
 
   try {
     if (!file.buffer) {
@@ -41,7 +41,7 @@ async function uploadImage(req, res, next) {
 
       const connection = await mySqlPool.getConnection();
 
-      await connection.query(`INSERT INTO colors SET image_url = '${secureUrl}', skein_uuid = '${uuid}', name = '${name}'`);
+      await connection.query(`INSERT INTO colors SET image_url = '${secureUrl}', skein_uuid = '${uuid}', color = '${color}'`);
 
       connection.release();
 

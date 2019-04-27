@@ -13,7 +13,6 @@ sendgridMail.setApiKey(process.env.SENDGRID_API_KEY);
 async function validateSchema(payload) {
   const schema = {
     name: Joi.string().min(3).max(255).required(),
-    available: Joi.number().integer().min(0).max(1).required(),
     description: Joi.string().max(1000).required(),
     type_id: Joi.number().integer().min(1).max(20).required(),
     prize: Joi.number().required(),
@@ -27,14 +26,13 @@ async function validateSchema(payload) {
 }
 
 
-async function insertSkeinIntoDatabase(uuid, name, available, description, typeId, prize, composition, weight, large, colorId) {
+async function insertSkeinIntoDatabase(uuid, name, description, typeId, prize, composition, weight, large, colorId) {
 
   const connection = await mysqlPool.getConnection();
 
   await connection.query('INSERT INTO skeins SET ?', {
     skein_uuid: uuid,
     name,
-    available,
     description,
     type_id: typeId,
     prize,
@@ -59,7 +57,6 @@ async function create(req, res, next) {
   // corregir cuando tenga la tabla bien definida
   const {
     name,
-    available,
     type_id: typeId,
     prize,
     composition,
@@ -72,7 +69,7 @@ async function create(req, res, next) {
   const uuid = uuidV4();
 
   try {
-    await insertSkeinIntoDatabase(uuid, name, available, description, typeId, prize, composition, weight, large, colorId);
+    await insertSkeinIntoDatabase(uuid, name, description, typeId, prize, composition, weight, large, colorId);
 
     return res.status(201).json(uuid);
   } catch (error) {
