@@ -12,7 +12,7 @@ async function getSkeins(req, res, next) {
     if (typeId === undefined) {
 
       // corregir el select * cuando tenga la tabla bien definida
-      const sqlQuery = 'SELECT * FROM skeins s INNER JOIN colors c INNER JOIN types t ON s.color_id = c.color_id AND s.type_id = t.type_id';
+      const sqlQuery = 'SELECT * FROM skeins s INNER JOIN colors c ON s.color_id = c.color_id';
       const [result] = await connection.query(sqlQuery);
 
       if (result.length > 0) {

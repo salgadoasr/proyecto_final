@@ -1,6 +1,7 @@
 'use strict';
 
 const cloudinary = require('cloudinary');
+const uuidV4 = require('uuid/v4');
 
 const mySqlPool = require('../../../databases/mysql-pool');
 
@@ -14,9 +15,9 @@ cloudinary.config({
   api_secret: apiSecret,
 });
 
-async function createColor(req, res, next) {
+async function createKit(req, res, next) {
   const { file } = req;
-  const { uuid, color } = req.body;
+  const { uuid: skein_uuid, name, details, type_id } = req.body;
 
   try {
     if (!file.buffer) {
@@ -34,13 +35,14 @@ async function createColor(req, res, next) {
         return res.status(400).send(error);
       }
 
+      const uuid = uuidV4();
       const {
         secure_url: secureUrl,
       } = result;
 
       const connection = await mySqlPool.getConnection();
 
-      await connection.query(`INSERT INTO colors SET image_url = '${secureUrl}', skein_uuid = '${uuid}', color = '${color}'`);
+      await connection.query(`INSERT INTO kits SET image_url = '${secureUrl}', kit_uuid = '${uuid}', skein_uuid = '${skein_uuid}', name = '${name}', details = '${details}', type_id = '${type_id}'`);
 
       connection.release();
 
@@ -52,4 +54,4 @@ async function createColor(req, res, next) {
 }
 
 
-module.exports = createColor;
+module.exports = createKit;

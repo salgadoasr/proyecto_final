@@ -19,14 +19,13 @@ async function validateSchema(payload) {
     composition: Joi.string().max(1000).required(),
     weight: Joi.string().min(3).max(255).required(),
     large: Joi.string().min(3).max(255).required(),
-    color_id: Joi.number().integer().min(1).max(20).required(),
   };
 
   return Joi.validate(payload, schema);
 }
 
 
-async function insertSkeinIntoDatabase(uuid, name, description, typeId, prize, composition, weight, large, colorId) {
+async function insertSkeinIntoDatabase(uuid, name, description, typeId, prize, composition, weight, large) {
 
   const connection = await mysqlPool.getConnection();
 
@@ -39,7 +38,6 @@ async function insertSkeinIntoDatabase(uuid, name, description, typeId, prize, c
     composition,
     weight,
     large,
-    color_id: colorId,
   });
 
   connection.release();
@@ -62,14 +60,13 @@ async function create(req, res, next) {
     composition,
     weight,
     large,
-    color_id: colorId,
     description,
   } = accountData;
 
   const uuid = uuidV4();
 
   try {
-    await insertSkeinIntoDatabase(uuid, name, description, typeId, prize, composition, weight, large, colorId);
+    await insertSkeinIntoDatabase(uuid, name, description, typeId, prize, composition, weight, large);
 
     return res.status(201).json(uuid);
   } catch (error) {
