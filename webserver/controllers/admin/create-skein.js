@@ -14,7 +14,7 @@ async function validateSchema(payload) {
   const schema = {
     name: Joi.string().min(3).max(255).required(),
     description: Joi.string().max(1000).required(),
-    type_id: Joi.number().integer().min(1).max(20).required(),
+    season: Joi.string().required(),
     prize: Joi.number().required(),
     composition: Joi.string().max(1000).required(),
     weight: Joi.string().min(3).max(255).required(),
@@ -25,7 +25,7 @@ async function validateSchema(payload) {
 }
 
 
-async function insertSkeinIntoDatabase(uuid, name, description, typeId, prize, composition, weight, large) {
+async function insertSkeinIntoDatabase(uuid, name, description, season, prize, composition, weight, large) {
 
   const connection = await mysqlPool.getConnection();
 
@@ -33,7 +33,7 @@ async function insertSkeinIntoDatabase(uuid, name, description, typeId, prize, c
     skein_uuid: uuid,
     name,
     description,
-    type_id: typeId,
+    season,
     prize,
     composition,
     weight,
@@ -55,7 +55,7 @@ async function create(req, res, next) {
   // corregir cuando tenga la tabla bien definida
   const {
     name,
-    type_id: typeId,
+    season,
     prize,
     composition,
     weight,
@@ -66,7 +66,7 @@ async function create(req, res, next) {
   const uuid = uuidV4();
 
   try {
-    await insertSkeinIntoDatabase(uuid, name, description, typeId, prize, composition, weight, large);
+    await insertSkeinIntoDatabase(uuid, name, description, season, prize, composition, weight, large);
 
     return res.status(201).json(uuid);
   } catch (error) {

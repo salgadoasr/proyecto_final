@@ -17,7 +17,7 @@ cloudinary.config({
 
 async function createKit(req, res, next) {
   const { file } = req;
-  const { uuid: skein_uuid, name, details, type_id } = req.body;
+  const { uuid: skein_uuid, name, details, season } = req.body;
 
   try {
     if (!file.buffer) {
@@ -42,7 +42,7 @@ async function createKit(req, res, next) {
 
       const connection = await mySqlPool.getConnection();
 
-      await connection.query(`INSERT INTO kits SET image_url = '${secureUrl}', kit_uuid = '${uuid}', skein_uuid = '${skein_uuid}', name = '${name}', details = '${details}', type_id = '${type_id}'`);
+      await connection.query(`INSERT INTO kits SET image_url = '${secureUrl}', kit_uuid = '${uuid}', skein_uuid = '${skein_uuid}', name = '${name}', details = '${details}', season = '${season}'`);
 
       connection.release();
 
