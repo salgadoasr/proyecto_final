@@ -24,7 +24,6 @@ async function createColor(req, res, next) {
     }
     cloudinary.v2.uploader.upload_stream({
       resource_type: 'raw',
-      //public_id: uuid,
       width: 200,
       height: 200,
       format: 'jpg',

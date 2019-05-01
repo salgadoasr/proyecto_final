@@ -9,7 +9,6 @@ async function getProducts(req, res, next) {
   try {
     const connection = await mySqlPool.getConnection();
 
-    // corregir el select * cuando tenga la tabla bien definida
     const sqlQuery = `SELECT * FROM users WHERE user_uuid = '${uuid}'`;
 
     const [result] = await connection.query(sqlQuery);

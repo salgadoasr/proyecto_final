@@ -11,7 +11,6 @@ async function getSkeins(req, res, next) {
 
     if (season === undefined) {
 
-      // corregir el select * cuando tenga la tabla bien definida
       const sqlQuery = 'SELECT * FROM skeins s INNER JOIN colors c ON s.color_id = c.color_id ORDER BY s.season';
       const [result] = await connection.query(sqlQuery);
 
@@ -21,7 +20,6 @@ async function getSkeins(req, res, next) {
       }
     } else {
 
-      // corregir el select * cuando tenga la tabla bien definida
       const sqlQuery = `SELECT *
       FROM skeins
       WHERE season ='${season}'`;

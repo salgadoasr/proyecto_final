@@ -5,8 +5,6 @@ const Joi = require('joi');
 
 const mySqlPool = require('../../../databases/mysql-pool');
 
-
-// corregir cuando tenga la tabla bien definida
 async function validateSchema(payload) {
   const schema = {
     name: Joi.string().min(3).max(150).required(),

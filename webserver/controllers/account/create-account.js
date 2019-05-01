@@ -76,7 +76,6 @@ async function create(req, res, next) {
     return res.status(400).send(error.message);
   }
 
-  // corregir cuando tenga la tabla bien definida
   const {
     name,
     surnames,
