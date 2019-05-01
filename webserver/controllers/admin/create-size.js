@@ -14,7 +14,7 @@ async function validateSchema(payload) {
     size: Joi.string().min(1).max(255).required(),
     prize: Joi.number().required(),
     kit_uuid: Joi.string().min(3).max(255).required(),
-    skeins: Joi.number().required(),
+    num_skeins: Joi.number().required(),
   };
 
   return Joi.validate(payload, schema);
@@ -34,12 +34,12 @@ async function create(req, res, next) {
     size,
     kit_uuid: kitUuid,
     prize,
-    skeins,
+    num_skeins: numSkeins,
   } = kitData;
 
   try {
     const connection = await mysqlPool.getConnection();
-    await connection.query(`INSERT INTO sizes SET kit_uuid = '${kitUuid}', size = '${size}', prize = '${prize}', skeins = '${skeins}'`);
+    await connection.query(`INSERT INTO sizes SET kit_uuid = '${kitUuid}', size = '${size}', prize = '${prize}', num_skeins = '${numSkeins}'`);
 
     connection.release();
     return res.status(204).send();

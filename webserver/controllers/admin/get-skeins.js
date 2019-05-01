@@ -8,7 +8,6 @@ async function getSkeins(req, res, next) {
   try {
     const connection = await mySqlPool.getConnection();
 
-    // corregir el select * cuando tenga la tabla bien definida
     const sqlQuery = 'SELECT * FROM skeins';
     const [result] = await connection.query(sqlQuery);
     if (result.length > 0) {

@@ -8,7 +8,7 @@ async function getKits(req, res, next) {
     const connection = await mySqlPool.getConnection();
 
     // corregir el select * cuando tenga la tabla bien definida
-    const sqlQuery = 'SELECT * FROM kits k INNER JOIN sizes s ON k.size_id = s.size_id';
+    const sqlQuery = 'SELECT * FROM kits k INNER JOIN sizes s ON k.size_id = s.size_id ORDER BY k.season';
 
     const [result] = await connection.query(sqlQuery);
 

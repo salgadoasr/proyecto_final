@@ -17,8 +17,8 @@ async function validateSchema(payload) {
     season: Joi.string().required(),
     prize: Joi.number().required(),
     composition: Joi.string().max(1000).required(),
-    weight: Joi.string().min(3).max(255).required(),
-    large: Joi.string().min(3).max(255).required(),
+    weight: Joi.string().min(1).max(255).required(),
+    large: Joi.string().min(1).max(255).required(),
   };
 
   return Joi.validate(payload, schema);

@@ -5,17 +5,18 @@ const mySqlPool = require('../../../databases/mysql-pool');
 
 async function getSkein(req, res, next) {
   const { skein_uuid: skeinUuid } = req.query;
-
   try {
     const connection = await mySqlPool.getConnection();
 
-    // corregir el select * cuando tenga la tabla bien definida
-    const sqlQuery = `SELECT * FROM skeins WHERE skein_uuid ='${skeinUuid}'`;
-
+    const sqlQuery = `SELECT * FROM skeins s INNER JOIN colors c ON s.color_id = c.color_id WHERE s.skein_uuid = '${skeinUuid}'`;
+    const sqlQueryColor = `SELECT * FROM colors WHERE skein_uuid = '${skeinUuid}'`;
     const [result] = await connection.query(sqlQuery);
-    if (result.length > 0) {
+    const [colors] = await connection.query(sqlQueryColor);
+
+    if (result.length > 0 && colors.length > 0) {
+      result[0].colors = colors;
       connection.release();
-      return res.status(200).send(result);
+      return res.status(200).send(result[0]);
     }
     connection.release();
     return res.status(404).send();
