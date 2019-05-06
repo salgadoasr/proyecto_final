@@ -5,12 +5,7 @@ const uuidV4 = require('uuid/v4');
 const mySqlPool = require('../../../databases/mysql-pool');
 
 async function createOrder(req, res, next) {
-  const orderData = { ...req.body };
-
-  const {
-    product_uuid: productUuid,
-    quantity,
-  } = orderData;
+  const { products } = req.body;
 
   const now = new Date();
   const purchaseAT = now.toISOString().substring(0, 19).replace('T', ' ');
@@ -20,13 +15,40 @@ async function createOrder(req, res, next) {
   try {
     const connection = await mySqlPool.getConnection();
 
-    await connection.query('INSERT INTO orders SET ?', {
-      quantity,
-      order_uuid: uuid,
-      user_uuid: userUuid,
-      product_uuid: productUuid,
-      purchase_at: purchaseAT,
-    });
+    const [userEmail] = await connection.query(`SELECT email FROM users WHERE user_uuid = '${userUuid}'`);
+
+    for (let i = 0; i < products.length; i++) {
+      if (products[i].color) {
+        // eslint-disable-next-line no-await-in-loop
+        await connection.query('INSERT INTO orders SET ?', {
+          order_uuid: uuid,
+          user_uuid: userUuid,
+          purchase_at: purchaseAT,
+          user_email: userEmail[0].email,
+          product_uuid: products[i].skeinUuid,
+          quantity: products[i].quantity,
+          total_prize: products[i].totalPrize,
+          color: products[i].color,
+          image_url: products[i].imageUrl,
+          product_name: products[i].name,
+        });
+      } else {
+        // eslint-disable-next-line no-await-in-loop
+        await connection.query('INSERT INTO orders SET ?', {
+          order_uuid: uuid,
+          user_uuid: userUuid,
+          purchase_at: purchaseAT,
+          user_email: userEmail[0].email,
+          product_uuid: products[i].kitUuid,
+          quantity: products[i].quantity,
+          total_prize: products[i].totalPrize,
+          size: products[i].size,
+          image_url: products[i].imageUrl,
+          product_name: products[i].name,
+        });
+      }
+    }
+
 
     connection.release();
 

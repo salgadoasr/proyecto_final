@@ -13,6 +13,7 @@ const getKits = require('../controllers/admin/get-kits');
 const createSize = require('../controllers/admin/create-size');
 const deleteSkein = require('../controllers/admin/delete-skein');
 const deleteKit = require('../controllers/admin/delete-kit');
+const getOrders = require('../controllers/admin/get-orders');
 
 const upload = multer();
 const adminRouter = express.Router();
@@ -25,6 +26,7 @@ adminRouter.post('/admin/createkit', checkJwtToken, checkIsAdmin, upload.single(
 adminRouter.post('/admin/createsize', checkJwtToken, checkIsAdmin, createSize);
 adminRouter.delete('/admin/deleteskein', checkJwtToken, checkIsAdmin, deleteSkein);
 adminRouter.delete('/admin/deletekit', checkJwtToken, checkIsAdmin, deleteKit);
+adminRouter.get('/admin/orders', checkJwtToken, getOrders);
 
 
 module.exports = adminRouter;
