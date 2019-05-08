@@ -31,12 +31,14 @@ async function getOrders(req, res, next) {
 
       for (let i = 0; i < result.length; i++) {
         if (result[i].order_uuid === orderUuid) {
+          result[i].purchase_at = result[i].purchase_at.toISOString().substring(0, 19).replace('T', ' ');
           addProductToArray(result, productsInOrder, i);
           result[i].products = productsInOrder.slice();
 
         } else {
           orderUuid = result[i].order_uuid;
           productsInOrder.length = 0;
+          result[i].purchase_at = result[i].purchase_at.toISOString().substring(0, 19).replace('T', ' ');
           order.push(result[i - 1]);
           addProductToArray(result, productsInOrder, i);
           result[i].products = productsInOrder.slice();

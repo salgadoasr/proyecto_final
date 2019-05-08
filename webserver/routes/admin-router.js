@@ -26,7 +26,7 @@ adminRouter.post('/admin/createkit', checkJwtToken, checkIsAdmin, upload.single(
 adminRouter.post('/admin/createsize', checkJwtToken, checkIsAdmin, createSize);
 adminRouter.delete('/admin/deleteskein', checkJwtToken, checkIsAdmin, deleteSkein);
 adminRouter.delete('/admin/deletekit', checkJwtToken, checkIsAdmin, deleteKit);
-adminRouter.get('/admin/orders', checkJwtToken, getOrders);
+adminRouter.get('/admin/orders', checkJwtToken, checkIsAdmin, getOrders);
 
 
 module.exports = adminRouter;

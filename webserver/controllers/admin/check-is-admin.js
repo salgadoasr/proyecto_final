@@ -13,7 +13,7 @@ async function isAdmin(req, res, next) {
     if (decoded.isAdmin === 1) {
       return next();
     }
-    console.log(decoded.isAdmin);
+
     return res.status(401).send();
   } catch (error) {
 
